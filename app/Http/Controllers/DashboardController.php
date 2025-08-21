@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Services\NotificationService;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -37,11 +38,19 @@ class DashboardController extends Controller
             ->orderByRaw('CASE WHEN end_date < ? THEN 0 ELSE 1 END, end_date ASC', [$today])
             ->get();
 
+        // Get notification data
+        $renewalNotifications = NotificationService::getUrgentNotifications(10);
+        $notificationCounts = NotificationService::getNotificationCounts();
+        $hasCriticalNotifications = NotificationService::hasCriticalNotifications();
+
         return view('index', compact(
             'totalRenewals',
             'renewalsDueThisWeek',
             'overdueRenewals',
-            'criticalRenewals'
+            'criticalRenewals',
+            'renewalNotifications',
+            'notificationCounts',
+            'hasCriticalNotifications'
         ));
     }
 }

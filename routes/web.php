@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +75,16 @@ Route::middleware('auth')->group(function () {
     // Mail routes for sending renewal emails
     Route::get('/send-mail/{service_id}', [MailController::class, 'sendMailForm'])->name('send-mail');
     Route::post('/send-mail', [MailController::class, 'sendMail'])->name('send-mail.send');
+
+    // Notification routes
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/renewal', [NotificationController::class, 'getRenewalNotifications'])->name('renewal');
+        Route::get('/counts', [NotificationController::class, 'getNotificationCounts'])->name('counts');
+        Route::get('/urgent', [NotificationController::class, 'getUrgentNotifications'])->name('urgent');
+        Route::get('/summary', [NotificationController::class, 'getNotificationSummary'])->name('summary');
+        Route::post('/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+    });
 
     // Additional routes for backward compatibility
     Route::get('/vendor1', [VendorController::class, 'index'])->name('vendor1');

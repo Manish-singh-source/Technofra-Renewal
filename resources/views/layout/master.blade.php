@@ -4,6 +4,7 @@
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<!--favicon-->
 	<link rel="icon" href="assets/images/favicon-32x32.png" type="image/png"/>
 	<!--plugins-->
@@ -25,6 +26,98 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/dark-theme.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('assets/css/semi-dark.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('assets/css/header-colors.css') }}"/>
+
+	<!-- Custom Notification Styles -->
+	<style>
+		.alert-count {
+			position: absolute;
+			top: -8px;
+			right: -8px;
+			background: #dc3545;
+			color: white;
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+			font-size: 11px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 600;
+			border: 2px solid white;
+		}
+
+		.alert-count.bg-warning {
+			background: #ffc107 !important;
+			color: #000 !important;
+		}
+
+		.notify {
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+		}
+
+		.header-notifications-list .dropdown-item {
+			padding: 12px 20px;
+			border-bottom: 1px solid #f0f0f0;
+		}
+
+		.header-notifications-list .dropdown-item:last-child {
+			border-bottom: none;
+		}
+
+		.header-notifications-list .dropdown-item:hover {
+			background-color: #f8f9fa;
+		}
+
+		.msg-name {
+			font-size: 14px;
+			font-weight: 600;
+			margin-bottom: 4px;
+		}
+
+		.msg-info {
+			font-size: 13px;
+			color: #6c757d;
+			margin-bottom: 2px;
+		}
+
+		.msg-time {
+			font-size: 11px;
+			color: #adb5bd;
+		}
+
+		.bg-light-danger {
+			background-color: rgba(220, 53, 69, 0.1) !important;
+		}
+
+		.bg-light-warning {
+			background-color: rgba(255, 193, 7, 0.1) !important;
+		}
+
+		.bg-light-info {
+			background-color: rgba(13, 202, 240, 0.1) !important;
+		}
+
+		.bg-light-success {
+			background-color: rgba(25, 135, 84, 0.1) !important;
+		}
+
+		/* Pulsing animation for critical notifications */
+		@keyframes pulse {
+			0% { transform: scale(1); }
+			50% { transform: scale(1.1); }
+			100% { transform: scale(1); }
+		}
+
+		.nav-link .bx-bell.text-danger {
+			animation: pulse 2s infinite;
+		}
+	</style>
+
 	<title>Technofra Renewal</title>
 </head>
 
@@ -433,128 +526,74 @@
 							</li>
 
 							<li class="nav-item dropdown dropdown-large">
-								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count">7</span>
-									<i class='bx bx-bell'></i>
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown">
+									@if(isset($notificationCounts) && $notificationCounts['total'] > 0)
+										<span class="alert-count {{ (isset($hasCriticalNotifications) && $hasCriticalNotifications) ? 'bg-danger' : 'bg-warning' }}">{{ $notificationCounts['total'] }}</span>
+									@endif
+									<i class='bx bx-bell {{ (isset($hasCriticalNotifications) && $hasCriticalNotifications) ? 'text-danger' : '' }}'></i>
 								</a>
 								<div class="dropdown-menu dropdown-menu-end">
 									<a href="javascript:;">
 										<div class="msg-header">
-											<p class="msg-header-title">Notifications</p>
-											<p class="msg-header-badge">8 New</p>
+											<p class="msg-header-title">Renewal Notifications</p>
+											@if(isset($notificationCounts) && isset($notificationCounts['total']) && $notificationCounts['total'] > 0)
+												<p class="msg-header-badge">{{ $notificationCounts['total'] }} {{ $notificationCounts['total'] == 1 ? 'Alert' : 'Alerts' }}</p>
+											@else
+												<p class="msg-header-badge">No Alerts</p>
+											@endif
 										</div>
 									</a>
 									<div class="header-notifications-list">
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-1.png" class="msg-avatar" alt="user avatar">
+										@if(isset($renewalNotifications) && count($renewalNotifications) > 0)
+											@foreach($renewalNotifications as $notification)
+												<div class="dropdown-item p-0">
+													<div class="d-flex align-items-center p-3">
+														<div class="notify {{ $notification['bg_color'] }} rounded-circle">
+															<i class='bx {{ $notification['icon'] }} {{ $notification['color'] }}'></i>
+														</div>
+														<div class="flex-grow-1 ms-3">
+															<h6 class="msg-name mb-1">{{ $notification['title'] }}
+																<span class="msg-time float-end">{{ $notification['time_ago'] }}</span>
+															</h6>
+															<p class="msg-info mb-1">{{ $notification['message'] }}</p>
+															<small class="text-muted">Client: {{ $notification['client'] }}</small>
+															<div class="mt-2">
+																<a href="{{ $notification['action_url'] }}" class="btn btn-primary btn-sm me-2">
+																	<i class='bx bx-envelope'></i> Send Email
+																</a>
+																<button type="button" class="btn btn-outline-secondary btn-sm"
+																	onclick="markNotificationAsSeen({{ $notification['id'] }}, '{{ $notification['type'] }}')">
+																	<i class='bx bx-check'></i> Mark as Seen
+																</button>
+															</div>
+														</div>
+													</div>
 												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Daisy Anderson<span class="msg-time float-end">5 sec
-												ago</span></h6>
-													<p class="msg-info">The standard chunk of lorem</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-danger text-danger">dc
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New Orders <span class="msg-time float-end">2 min
-												ago</span></h6>
-													<p class="msg-info">You have recived new orders</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-2.png" class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Althea Cabardo <span class="msg-time float-end">14
-												sec ago</span></h6>
-													<p class="msg-info">Many desktop publishing packages</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-success text-success">
-													<img src="assets/images/app/outlook.png" width="25" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Account Created<span class="msg-time float-end">28 min
-												ago</span></h6>
-													<p class="msg-info">Successfully created new email</p>
+												@if(!$loop->last)
+													<div class="dropdown-divider my-0"></div>
+												@endif
+											@endforeach
+										@else
+											<div class="dropdown-item text-center py-3">
+												<div class="d-flex flex-column align-items-center">
+													<i class='bx bx-check-circle text-success' style="font-size: 2rem;"></i>
+													<p class="mb-0 mt-2 text-muted">No renewal alerts</p>
+													<small class="text-muted">All services are up to date</small>
 												</div>
 											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-info text-info">Ss
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New Product Approved <span
-												class="msg-time float-end">2 hrs ago</span></h6>
-													<p class="msg-info">Your new product has approved</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-4.png" class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Katherine Pechon <span class="msg-time float-end">15
-												min ago</span></h6>
-													<p class="msg-info">Making this the first true generator</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-success text-success"><i class='bx bx-check-square'></i>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Your item is shipped <span class="msg-time float-end">5 hrs
-												ago</span></h6>
-													<p class="msg-info">Successfully shipped your item</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-primary">
-													<img src="assets/images/app/github.png" width="25" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New 24 authors<span class="msg-time float-end">1 day
-												ago</span></h6>
-													<p class="msg-info">24 new authors joined last week</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-8.png" class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Peter Costanzo <span class="msg-time float-end">6 hrs
-												ago</span></h6>
-													<p class="msg-info">It was popularised in the 1960s</p>
-												</div>
-											</div>
-										</a>
+										@endif
 									</div>
-									<a href="javascript:;">
-										<div class="text-center msg-footer">
-											<button class="btn btn-primary w-100">View All Notifications</button>
+									@if(isset($renewalNotifications) && count($renewalNotifications) > 0)
+										<div class="dropdown-divider"></div>
+										<div class="text-center py-2">
+											<button type="button" class="btn btn-success btn-sm me-2" onclick="markAllNotificationsAsSeen()">
+												<i class='bx bx-check-double'></i> Mark All as Seen
+											</button>
+											<a href="{{ route('dashboard') }}" class="btn btn-primary btn-sm">
+												<i class='bx bx-list-ul'></i> View All Services
+											</a>
 										</div>
-									</a>
+									@endif
 								</div>
 							</li>
 							<li class="nav-item dropdown dropdown-large">
@@ -944,6 +983,133 @@
 	<script src="assets/js/app.js"></script>
 	<script>
 		new PerfectScrollbar(".app-container")
+	</script>
+
+	<!-- Notification System JavaScript -->
+	<script>
+		// Refresh notifications every 5 minutes
+		function refreshNotifications() {
+			fetch('/notifications/counts')
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						// Update notification count badge
+						const alertCount = document.querySelector('.alert-count');
+						const bellIcon = document.querySelector('.bx-bell');
+
+						if (data.counts.total > 0) {
+							if (alertCount) {
+								alertCount.textContent = data.counts.total;
+								alertCount.className = data.has_critical ? 'alert-count bg-danger' : 'alert-count bg-warning';
+								alertCount.style.display = 'flex';
+							}
+
+							if (bellIcon && data.has_critical) {
+								bellIcon.classList.add('text-danger');
+							} else if (bellIcon) {
+								bellIcon.classList.remove('text-danger');
+							}
+						} else {
+							if (alertCount) {
+								alertCount.style.display = 'none';
+							}
+							if (bellIcon) {
+								bellIcon.classList.remove('text-danger');
+							}
+						}
+
+						// Update header badge text
+						const headerBadge = document.querySelector('.msg-header-badge');
+						if (headerBadge) {
+							if (data.counts.total > 0) {
+								headerBadge.textContent = data.counts.total + (data.counts.total === 1 ? ' Alert' : ' Alerts');
+							} else {
+								headerBadge.textContent = 'No Alerts';
+							}
+						}
+					}
+				})
+				.catch(error => {
+					console.log('Error refreshing notifications:', error);
+				});
+		}
+
+		// Mark a single notification as seen
+		function markNotificationAsSeen(serviceId, notificationType) {
+			const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+			fetch('/notifications/mark-read', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRF-TOKEN': csrfToken
+				},
+				body: JSON.stringify({
+					service_id: serviceId,
+					notification_type: notificationType
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					// Refresh notifications to update the UI
+					refreshNotifications();
+
+					// Show success message (optional)
+					console.log('Notification marked as seen');
+				} else {
+					console.error('Failed to mark notification as seen:', data.message);
+				}
+			})
+			.catch(error => {
+				console.error('Error marking notification as seen:', error);
+			});
+		}
+
+		// Mark all notifications as seen
+		function markAllNotificationsAsSeen() {
+			const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+			fetch('/notifications/mark-all-read', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRF-TOKEN': csrfToken
+				}
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					// Refresh notifications to update the UI
+					refreshNotifications();
+
+					// Show success message (optional)
+					console.log('All notifications marked as seen');
+
+					// Close the dropdown
+					const dropdown = document.querySelector('.dropdown-menu.show');
+					if (dropdown) {
+						dropdown.classList.remove('show');
+					}
+				} else {
+					console.error('Failed to mark all notifications as seen:', data.message);
+				}
+			})
+			.catch(error => {
+				console.error('Error marking all notifications as seen:', error);
+			});
+		}
+
+		// Refresh notifications on page load and every 5 minutes
+		document.addEventListener('DOMContentLoaded', function() {
+			refreshNotifications();
+			setInterval(refreshNotifications, 300000); // 5 minutes
+		});
+
+		// Function to manually refresh notifications (can be called from anywhere)
+		window.refreshNotifications = refreshNotifications;
+		window.markNotificationAsSeen = markNotificationAsSeen;
+		window.markAllNotificationsAsSeen = markAllNotificationsAsSeen;
 	</script>
 </body>
 
