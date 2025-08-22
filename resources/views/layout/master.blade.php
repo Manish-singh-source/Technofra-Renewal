@@ -780,7 +780,7 @@
 									</a>
 								</div>
 							</li>
-							<li><a href="app-to-do.php"><i class='bx bx-list-check' style="font-size: 28px;color: #000;"></i></a></li>
+							<li><a href="{{ route('app-to-do') }}"><i class='bx bx-list-check' style="font-size: 28px;color: #000;"></i></a></li>
 						</ul>
 					</div>
 					<div class="user-box dropdown px-3">
@@ -1114,5 +1114,5 @@
 </body>
 
 <script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'p3plzcpnl509132'},{'dcenter':'p3'},{'cp_id':'10399385'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='../../../../img1.wsimg.com/signals/js/clients/scc-c2/scc-c2.min.js'></script>
-<!-- Mirrored from codervent.com/rocker/demo/vertical/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Aug 2025 07:30:06 GMT -->
+
 </html>

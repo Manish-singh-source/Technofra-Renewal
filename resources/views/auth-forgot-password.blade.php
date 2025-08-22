@@ -20,7 +20,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
 	<link href="assets/css/app.css" rel="stylesheet">
 	<link href="assets/css/icons.css" rel="stylesheet">
-	<title>Technofra Renewal Master</title>
+	<title>Forgot Password - Technofra Renewal Master</title>
 </head>
 
 <body class="">
@@ -37,13 +37,20 @@
 										<img src="assets/images/logo-icon.png" width="60" alt="" />
 									</div>
 									<div class="text-center mb-4">
-										<h5 class="">Technofra Admin</h5>
-										<p class="mb-0">Please log in to your account</p>
+										<h5 class="">Forgot Password</h5>
+										<p class="mb-0">Enter your email address and we'll send you a link to reset your password</p>
 									</div>
 									<div class="form-body">
 										@if(session('success'))
 											<div class="alert alert-success alert-dismissible fade show" role="alert">
 												{{ session('success') }}
+												<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+											</div>
+										@endif
+
+										@if(session('error'))
+											<div class="alert alert-danger alert-dismissible fade show" role="alert">
+												{{ session('error') }}
 												<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 											</div>
 										@endif
@@ -59,54 +66,29 @@
 											</div>
 										@endif
 
-										<form class="row g-3" method="POST" action="{{ route('login') }}">
+										<form class="row g-3" method="POST" action="{{ route('password.email') }}">
 											@csrf
 											<div class="col-12">
-												<label for="inputEmailAddress" class="form-label">Email</label>
+												<label for="inputEmailAddress" class="form-label">Email Address</label>
 												<input type="email" class="form-control @error('email') is-invalid @enderror"
 													   id="inputEmailAddress" name="email" value="{{ old('email') }}"
-													   placeholder="jhon@example.com" required>
+													   placeholder="Enter your email address" required>
 												@error('email')
 													<div class="invalid-feedback">{{ $message }}</div>
 												@enderror
 											</div>
 											<div class="col-12">
-												<label for="inputChoosePassword" class="form-label">Password</label>
-												<div class="input-group" id="show_hide_password">
-													<input type="password" class="form-control border-end-0 @error('password') is-invalid @enderror"
-														   id="inputChoosePassword" name="password" placeholder="Enter Password" required>
-													<a href="javascript:;" class="input-group-text bg-transparent">
-														<i class='bx bx-hide'></i>
-													</a>
-												</div>
-												@error('password')
-													<div class="invalid-feedback d-block">{{ $message }}</div>
-												@enderror
-											</div>
-											<div class="col-md-6">
-												<div class="form-check form-switch">
-													<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-														   name="remember" value="1" {{ old('remember') ? 'checked' : '' }}>
-													<label class="form-check-label" for="flexSwitchCheckChecked">Remember Me</label>
-												</div>
-											</div>
-											<div class="col-md-6 text-end">
-												<a href="{{ route('password.request') }}">Forgot Password ?</a>
-											</div>
-											<div class="col-12">
 												<div class="d-grid">
-													<button type="submit" class="btn btn-primary">Sign in</button>
+													<button type="submit" class="btn btn-primary">Send Reset Link</button>
 												</div>
 											</div>
 											<div class="col-12">
-												<div class="text-center ">
-													<p class="mb-0">Don't have an account yet? <a href="{{ route('register') }}">Sign up here</a></p>
+												<div class="text-center">
+													<p class="mb-0">Remember your password? <a href="{{ route('login') }}">Sign in here</a></p>
 												</div>
 											</div>
 										</form>
 									</div>
-								
-
 								</div>
 							</div>
 						</div>
@@ -124,27 +106,8 @@
 	<script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
 	<script src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-	<!--Password show & hide js -->
-	<script>
-		$(document).ready(function () {
-			$("#show_hide_password a").on('click', function (event) {
-				event.preventDefault();
-				if ($('#show_hide_password input').attr("type") == "text") {
-					$('#show_hide_password input').attr('type', 'password');
-					$('#show_hide_password i').addClass("bx-hide");
-					$('#show_hide_password i').removeClass("bx-show");
-				} else if ($('#show_hide_password input').attr("type") == "password") {
-					$('#show_hide_password input').attr('type', 'text');
-					$('#show_hide_password i').removeClass("bx-hide");
-					$('#show_hide_password i').addClass("bx-show");
-				}
-			});
-		});
-	</script>
 	<!--app JS-->
 	<script src="assets/js/app.js"></script>
 </body>
-
-<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'p3plzcpnl509132'},{'dcenter':'p3'},{'cp_id':'10399385'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='../../../../img1.wsimg.com/signals/js/clients/scc-c2/scc-c2.min.js'></script>
 
 </html>

@@ -20,14 +20,14 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
 	<link href="assets/css/app.css" rel="stylesheet">
 	<link href="assets/css/icons.css" rel="stylesheet">
-	<title>Technofra Renewal Master</title>
+	<title>Reset Password - Technofra Renewal Master</title>
 </head>
 
 <body class="">
 	<!--wrapper-->
 	<div class="wrapper">
-		<div class="d-flex align-items-center justify-content-center my-5">
-			<div class="container-fluid">
+		<div class="section-authentication-signin d-flex align-items-center justify-content-center my-5 my-lg-0">
+			<div class="container">
 				<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
 					<div class="col mx-auto">
 						<div class="card mb-0">
@@ -37,13 +37,20 @@
 										<img src="assets/images/logo-icon.png" width="60" alt="" />
 									</div>
 									<div class="text-center mb-4">
-										<h5 class="">Technofra Admin</h5>
-										<p class="mb-0">Please fill the below details to create your account</p>
+										<h5 class="">Reset Password</h5>
+										<p class="mb-0">Enter your new password below</p>
 									</div>
 									<div class="form-body">
 										@if(session('success'))
 											<div class="alert alert-success alert-dismissible fade show" role="alert">
 												{{ session('success') }}
+												<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+											</div>
+										@endif
+
+										@if(session('error'))
+											<div class="alert alert-danger alert-dismissible fade show" role="alert">
+												{{ session('error') }}
 												<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 											</div>
 										@endif
@@ -59,31 +66,21 @@
 											</div>
 										@endif
 
-										<form class="row g-3" method="POST" action="{{ route('register') }}">
+										<form class="row g-3" method="POST" action="{{ route('password.update') }}">
 											@csrf
-											<div class="col-12">
-												<label for="inputUsername" class="form-label">Name</label>
-												<input type="text" class="form-control @error('name') is-invalid @enderror"
-													   id="inputUsername" name="name" value="{{ old('name') }}"
-													   placeholder="Enter your full name" required>
-												@error('name')
-													<div class="invalid-feedback">{{ $message }}</div>
-												@enderror
-											</div>
+											<input type="hidden" name="token" value="{{ $token }}">
+											<input type="hidden" name="email" value="{{ $email }}">
+											
 											<div class="col-12">
 												<label for="inputEmailAddress" class="form-label">Email Address</label>
-												<input type="email" class="form-control @error('email') is-invalid @enderror"
-													   id="inputEmailAddress" name="email" value="{{ old('email') }}"
-													   placeholder="example@user.com" required>
-												@error('email')
-													<div class="invalid-feedback">{{ $message }}</div>
-												@enderror
+												<input type="email" class="form-control" id="inputEmailAddress" 
+													   value="{{ $email }}" readonly>
 											</div>
 											<div class="col-12">
-												<label for="inputChoosePassword" class="form-label">Password</label>
+												<label for="inputNewPassword" class="form-label">New Password</label>
 												<div class="input-group" id="show_hide_password">
 													<input type="password" class="form-control border-end-0 @error('password') is-invalid @enderror"
-														   id="inputChoosePassword" name="password" placeholder="Enter Password" required>
+														   id="inputNewPassword" name="password" placeholder="Enter New Password" required>
 													<a href="javascript:;" class="input-group-text bg-transparent">
 														<i class='bx bx-hide'></i>
 													</a>
@@ -94,45 +91,34 @@
 											</div>
 											<div class="col-12">
 												<label for="inputConfirmPassword" class="form-label">Confirm Password</label>
-												<input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
-													   id="inputConfirmPassword" name="password_confirmation"
-													   placeholder="Confirm Password" required>
+												<div class="input-group" id="show_hide_password_confirm">
+													<input type="password" class="form-control border-end-0 @error('password_confirmation') is-invalid @enderror"
+														   id="inputConfirmPassword" name="password_confirmation" placeholder="Confirm New Password" required>
+													<a href="javascript:;" class="input-group-text bg-transparent">
+														<i class='bx bx-hide'></i>
+													</a>
+												</div>
 												@error('password_confirmation')
-													<div class="invalid-feedback">{{ $message }}</div>
+													<div class="invalid-feedback d-block">{{ $message }}</div>
 												@enderror
 											</div>
 											<div class="col-12">
-												<div class="form-check form-switch">
-													<input class="form-check-input @error('terms') is-invalid @enderror"
-														   type="checkbox" id="flexSwitchCheckChecked" name="terms" value="1"
-														   {{ old('terms') ? 'checked' : '' }} required>
-													<label class="form-check-label" for="flexSwitchCheckChecked">
-														I read and agree to Terms & Conditions
-													</label>
-													@error('terms')
-														<div class="invalid-feedback d-block">{{ $message }}</div>
-													@enderror
-												</div>
-											</div>
-											<div class="col-12">
 												<div class="d-grid">
-													<button type="submit" class="btn btn-primary">Sign up</button>
+													<button type="submit" class="btn btn-primary">Reset Password</button>
 												</div>
 											</div>
 											<div class="col-12">
-												<div class="text-center ">
-													<p class="mb-0">Already have an account? <a href="{{ route('login') }}">Sign in here</a></p>
+												<div class="text-center">
+													<p class="mb-0">Remember your password? <a href="{{ route('login') }}">Sign in here</a></p>
 												</div>
 											</div>
 										</form>
 									</div>
-									
-
 								</div>
 							</div>
 						</div>
 					</div>
-				 </div>
+				</div>
 				<!--end row-->
 			</div>
 		</div>
@@ -160,12 +146,23 @@
 					$('#show_hide_password i').addClass("bx-show");
 				}
 			});
+			
+			$("#show_hide_password_confirm a").on('click', function (event) {
+				event.preventDefault();
+				if ($('#show_hide_password_confirm input').attr("type") == "text") {
+					$('#show_hide_password_confirm input').attr('type', 'password');
+					$('#show_hide_password_confirm i').addClass("bx-hide");
+					$('#show_hide_password_confirm i').removeClass("bx-show");
+				} else if ($('#show_hide_password_confirm input').attr("type") == "password") {
+					$('#show_hide_password_confirm input').attr('type', 'text');
+					$('#show_hide_password_confirm i').removeClass("bx-hide");
+					$('#show_hide_password_confirm i').addClass("bx-show");
+				}
+			});
 		});
 	</script>
 	<!--app JS-->
 	<script src="assets/js/app.js"></script>
 </body>
-
-<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'p3plzcpnl509132'},{'dcenter':'p3'},{'cp_id':'10399385'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='../../../../img1.wsimg.com/signals/js/clients/scc-c2/scc-c2.min.js'></script>
 
 </html>
