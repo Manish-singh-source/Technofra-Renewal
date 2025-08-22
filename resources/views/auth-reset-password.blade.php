@@ -21,6 +21,32 @@
 	<link href="assets/css/app.css" rel="stylesheet">
 	<link href="assets/css/icons.css" rel="stylesheet">
 	<title>Reset Password - Technofra Renewal Master</title>
+	<style>
+		.password-requirements {
+			font-size: 0.875rem;
+			color: #6c757d;
+			margin-top: 0.25rem;
+		}
+		.password-requirements ul {
+			margin: 0;
+			padding-left: 1rem;
+		}
+		.password-requirements li {
+			margin-bottom: 0.25rem;
+		}
+		.form-control:focus {
+			border-color: #0d6efd;
+			box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+		}
+		.btn-primary {
+			background-color: #0d6efd;
+			border-color: #0d6efd;
+		}
+		.btn-primary:hover {
+			background-color: #0b5ed7;
+			border-color: #0a58ca;
+		}
+	</style>
 </head>
 
 <body class="">
@@ -37,8 +63,9 @@
 										<img src="assets/images/logo-icon.png" width="60" alt="" />
 									</div>
 									<div class="text-center mb-4">
-										<h5 class="">Reset Password</h5>
-										<p class="mb-0">Enter your new password below</p>
+										<h5 class="">Technofra Admin</h5>
+										<p class="mb-0">Create your new password</p>
+										<small class="text-muted">Password must be at least 6 characters long</small>
 									</div>
 									<div class="form-body">
 										@if(session('success'))
@@ -70,11 +97,11 @@
 											@csrf
 											<input type="hidden" name="token" value="{{ $token }}">
 											<input type="hidden" name="email" value="{{ $email }}">
-											
+
 											<div class="col-12">
 												<label for="inputEmailAddress" class="form-label">Email Address</label>
-												<input type="email" class="form-control" id="inputEmailAddress" 
-													   value="{{ $email }}" readonly>
+												<input type="email" class="form-control" id="inputEmailAddress"
+													   value="{{ $email }}" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
 											</div>
 											<div class="col-12">
 												<label for="inputNewPassword" class="form-label">New Password</label>
@@ -85,12 +112,15 @@
 														<i class='bx bx-hide'></i>
 													</a>
 												</div>
+												<div class="password-requirements">
+													<small>Password must be at least 6 characters long</small>
+												</div>
 												@error('password')
 													<div class="invalid-feedback d-block">{{ $message }}</div>
 												@enderror
 											</div>
 											<div class="col-12">
-												<label for="inputConfirmPassword" class="form-label">Confirm Password</label>
+												<label for="inputConfirmPassword" class="form-label">Confirm New Password</label>
 												<div class="input-group" id="show_hide_password_confirm">
 													<input type="password" class="form-control border-end-0 @error('password_confirmation') is-invalid @enderror"
 														   id="inputConfirmPassword" name="password_confirmation" placeholder="Confirm New Password" required>
@@ -114,6 +144,17 @@
 											</div>
 										</form>
 									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--end row-->
+			</div>
+		</div>
+	</div>
+	<!--end wrapper-->
 								</div>
 							</div>
 						</div>
@@ -134,6 +175,7 @@
 	<!--Password show & hide js -->
 	<script>
 		$(document).ready(function () {
+			// Password toggle for new password field
 			$("#show_hide_password a").on('click', function (event) {
 				event.preventDefault();
 				if ($('#show_hide_password input').attr("type") == "text") {
@@ -146,7 +188,8 @@
 					$('#show_hide_password i').addClass("bx-show");
 				}
 			});
-			
+
+			// Password toggle for confirm password field
 			$("#show_hide_password_confirm a").on('click', function (event) {
 				event.preventDefault();
 				if ($('#show_hide_password_confirm input').attr("type") == "text") {
@@ -159,10 +202,30 @@
 					$('#show_hide_password_confirm i').addClass("bx-show");
 				}
 			});
+
+			// Form validation
+			$('form').on('submit', function(e) {
+				var password = $('#inputNewPassword').val();
+				var confirmPassword = $('#inputConfirmPassword').val();
+
+				if (password.length < 6) {
+					e.preventDefault();
+					alert('Password must be at least 6 characters long.');
+					return false;
+				}
+
+				if (password !== confirmPassword) {
+					e.preventDefault();
+					alert('Passwords do not match.');
+					return false;
+				}
+			});
 		});
 	</script>
 	<!--app JS-->
 	<script src="assets/js/app.js"></script>
 </body>
+
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'p3plzcpnl509132'},{'dcenter':'p3'},{'cp_id':'10399385'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='../../../../img1.wsimg.com/signals/js/clients/scc-c2/scc-c2.min.js'></script>
 
 </html>
