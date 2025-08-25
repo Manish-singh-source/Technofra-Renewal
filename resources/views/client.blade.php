@@ -83,7 +83,7 @@
                                         <td>
                                             <div class="d-flex order-actions">
                                                 <a href="{{ route('client.view', $client->id) }}"><i class='bx bxs-show'></i></a>
-                                                <a href="javascript:;" class="ms-2"><i class='bx bxs-edit'></i></a>
+                                                <a href="{{ route('client.edit', $client->id) }}" class="ms-2"><i class='bx bxs-edit'></i></a>
                                                 <form action="{{ route('client.delete', $client->id) }}" method="POST"
                                                     onsubmit="return confirm('Are you sure?')" class="ms-2">
                                                     @csrf

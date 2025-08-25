@@ -103,7 +103,7 @@
         </div>
 
         <!-- Service Details -->
-        <div class="service-details">
+        {{-- <div class="service-details">
             <h3>Service Information</h3>
             
             <div class="detail-row">
@@ -163,7 +163,7 @@
                 <span class="detail-label">Status:</span>
                 <span class="detail-value">{{ ucfirst($service->status) }}</span>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Custom Message -->
         <div class="message-content">
@@ -174,7 +174,7 @@
         <!-- Call to Action -->
         <div style="text-align: center; margin: 30px 0;">
             <p>Please contact us to renew your service or if you have any questions.</p>
-            <a href="mailto:support@technofra.com" class="btn">Contact Support</a>
+            <a href="mailto:support@technofra.com" class="btn" style="color: #ffffff;">Contact Support</a>
         </div>
 
         <!-- Footer -->

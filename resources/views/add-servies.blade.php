@@ -42,7 +42,7 @@
 
             <div class="col-md-6">
                 <label for="serviceDetails" class="form-label">Service Details</label>
-                <input type="text" class="form-control" id="serviceDetails" placeholder="Service Details">
+                <input type="text" class="form-control" id="id="serviceDetails"" placeholder="Service Details">
             </div>
 
             <div class="col-md-6">
