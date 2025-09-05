@@ -34,7 +34,7 @@
 							<div class="card-body">
 								<div class="p-4">
 									<div class="mb-3 text-center">
-										<img src="assets/images/logo-icon.png" width="60" alt="" />
+										<img src="assets/images/technofra.png" width="150" alt="" />
 									</div>
 									<div class="text-center mb-4">
 										<h5 class="">Technofra Admin</h5>

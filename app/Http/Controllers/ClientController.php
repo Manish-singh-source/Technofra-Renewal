@@ -9,8 +9,21 @@ use Illuminate\Support\Facades\Validator;
 class ClientController extends Controller
 {
     //
+    public function deleteSelected(Request $request)
+    {
+        $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+        Client::destroy($ids);
+        return redirect()->back()->with('success', 'Selected clients deleted successfully.');
+    }
+    public function toggleStatus(Request $request)
+    {
+        $clients= Client::findOrFail($request->id);
+        $clients->status = $request->status;
+        $clients->save();
 
-
+        return response()->json(['success' => true]);
+    }
+    
     public function client(){
         $clients = Client::all();
         return view('client' ,compact('clients'));

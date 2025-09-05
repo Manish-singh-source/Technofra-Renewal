@@ -13,6 +13,21 @@ class VendorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+     public function deleteSelected(Request $request)
+    {
+        $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+        Vendor::destroy($ids);
+        return redirect()->back()->with('success', 'Selected Vendors deleted successfully.');
+    }
+    public function toggleStatus(Request $request)
+    {
+        $Vendors = Vendor::findOrFail($request->id);
+        $Vendors->status = $request->status;
+        $Vendors->save();
+
+        return response()->json(['success' => true]);
+    }
+
     public function index()
     {
         $vendors = Vendor::latest()->get();

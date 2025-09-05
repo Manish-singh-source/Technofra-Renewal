@@ -21,12 +21,8 @@
                             class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
                             data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"> <a class="dropdown-item"
-                                href="javascript:;">Action</a>
-                            <a class="dropdown-item" href="javascript:;">Another action</a>
-                            <a class="dropdown-item" href="javascript:;">Something else here</a>
-                            <div class="dropdown-divider"></div> <a class="dropdown-item" href="javascript:;">Separated
-                                link</a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                            <a class="dropdown-item cursor-pointer" id="delete-selected">Delete All</a>
                         </div>
                     </div>
                 </div>
@@ -49,8 +45,7 @@
                         <table class="table mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th><input class="form-check-input me-3" type="checkbox" value=""
-                                            aria-label="..."></th>
+                                    <th> <input class="form-check-input" type="checkbox" id="select-all"></th>
                                     <th>Id</th>
                                     <th>Client Name</th>
                                     <th>Company Name</th>
@@ -63,8 +58,8 @@
                             <tbody>
                                 @foreach ($clients as $client)
                                     <tr>
-                                        <td><input class="form-check-input me-3" type="checkbox" value=""
-                                                aria-label="..."></td>
+                                        <td> <input class="form-check-input row-checkbox" type="checkbox" name="ids[]"
+                                                    value="{{ $client->id }}"></td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <h6 class="mb-0 font-14">{{ $client->id }}</h6>
@@ -75,23 +70,28 @@
                                         <td>{{ $client->email }}</td>
                                         <td>{{ $client->phone }}</td>
                                         <td>
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                                    checked="">
+                                            <div class="form-switch form-check-success">
+                                                <input class="form-check-input status-switch43" type="checkbox"
+                                                    role="switch" data-client-id="{{ $client->id }}"
+                                                    {{ $client->status == 1 ? 'checked' : '' }}>
                                             </div>
+
                                         </td>
                                         <td>
                                             <div class="d-flex order-actions">
-                                                <a href="{{ route('client.view', $client->id) }}"><i class='bx bxs-show'></i></a>
-                                                <a href="{{ route('client.edit', $client->id) }}" class="ms-2"><i class='bx bxs-edit'></i></a>
+                                                <a href="{{ route('client.view', $client->id) }}"><i
+                                                        class='bx bxs-show'></i></a>
+                                                <a href="{{ route('client.edit', $client->id) }}" class="ms-2"><i
+                                                        class='bx bxs-edit'></i></a>
                                                 <form action="{{ route('client.delete', $client->id) }}" method="POST"
                                                     onsubmit="return confirm('Are you sure?')" class="ms-2">
                                                     @csrf
                                                     @method('DELETE')
-													<a>
-                                                   <button type="submit" style="border: none;"><i class='bx bxs-trash'></i></button>
-</a>
-													</form>
+                                                    <a>
+                                                        <button type="submit" style="border: none;"><i
+                                                                class='bx bxs-trash'></i></button>
+                                                    </a>
+                                                </form>
                                             </div>
 
                                         </td>
@@ -108,6 +108,41 @@
 
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select All functionality
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            selectAll.addEventListener('change', function() {
+                checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            });
+
+            // Delete Selected functionality
+            document.getElementById('delete-selected').addEventListener('click', function() {
+                let selected = [];
+                document.querySelectorAll('.row-checkbox:checked').forEach(cb => {
+                    selected.push(cb.value);
+                });
+                if (selected.length === 0) {
+                    alert('Please select at least one record.');
+                    return;
+                }
+                if (confirm('Are you sure you want to delete selected records?')) {
+                    // Create a form and submit
+                    let form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('delete.selected.client') }}';
+                    form.innerHTML = `
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="ids" value="${selected.join(',')}">
+                    `;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    </script>
     <!--end page wrapper -->
     <!--start overlay-->
     <div class="overlay toggle-icon"></div>

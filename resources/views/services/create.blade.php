@@ -90,9 +90,9 @@
 											<input type="date" class="form-control" name="services[0][end_date]" required>
 										</div>
 										<div class="col-md-3">
-											<label class="form-label">Amount <span class="text-danger">*</span></label>
+											<label class="form-label">Amount</label>
 											<input type="number" class="form-control" name="services[0][amount]" 
-												   placeholder="0.00" step="0.01" min="0" required>
+												   placeholder="0.00" step="0.01" min="0">
 										</div>
 										<div class="col-md-3">
 											<label class="form-label">Status <span class="text-danger">*</span></label>

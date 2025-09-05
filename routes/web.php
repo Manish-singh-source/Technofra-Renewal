@@ -33,12 +33,14 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('aut
 Route::middleware('auth')->group(function () {
     // Client Controller
     Route::get('/client', [ClientController::class, 'client'])->name('client');
+    Route::post('/client/toggle-status',  [ClientController::class, 'toggleStatus'])->name('client.toggleStatus');
     Route::get('/add-client', [ClientController::class, 'addclient'])->name('add-client');
     Route::post('/store-client', [ClientController::class, 'storeclient'])->name('store-client');
     Route::get('/edit-client/{id}', [ClientController::class, 'editclient'])->name('client.edit');
     Route::put('/update-client/{id}', [ClientController::class, 'updateclient'])->name('client.update');
     Route::delete('/client/delete/{id}', [ClientController::class, 'deleteclient'])->name('client.delete');
     Route::get('/client-details/{id}', [ClientController::class, 'viewclient'])->name('client.view');
+     Route::delete('/client/delete-selected',  [ClientController::class, 'deleteSelected'])->name('delete.selected.client');
     //end Client controller
 
     // Other protected routes
@@ -90,6 +92,8 @@ Route::middleware('auth')->group(function () {
 
     // Additional routes for backward compatibility
     Route::get('/vendor1', [VendorController::class, 'index'])->name('vendor1');
+     Route::delete('/vendor1/delete-selected', [VendorController::class, 'deleteSelected'])->name('delete.selected.vendor');
+    Route::post('/vendor1/toggle-status',  [VendorController::class, 'toggleStatus'])->name('vendor1.toggleStatus');
     Route::get('/servies', [ServiceController::class, 'index'])->name('servies');
 });
 

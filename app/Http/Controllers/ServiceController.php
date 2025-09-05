@@ -52,7 +52,6 @@ class ServiceController extends Controller
             'services.*.service_details' => 'nullable|string',
             'services.*.start_date' => 'required|date',
             'services.*.end_date' => 'required|date|after_or_equal:services.*.start_date',
-            'services.*.amount' => 'required|numeric|min:0',
             'services.*.status' => 'required|in:active,inactive,expired,pending',
         ], [
             'client_id.required' => 'Please select a client.',
@@ -64,9 +63,7 @@ class ServiceController extends Controller
             'services.*.start_date.required' => 'Start date is required.',
             'services.*.end_date.required' => 'End date is required.',
             'services.*.end_date.after_or_equal' => 'End date must be after or equal to start date.',
-            'services.*.amount.required' => 'Amount is required.',
-            'services.*.amount.numeric' => 'Amount must be a number.',
-            'services.*.amount.min' => 'Amount must be greater than or equal to 0.',
+           
             'services.*.status.required' => 'Status is required.',
         ]);
 
