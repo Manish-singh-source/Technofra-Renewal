@@ -145,8 +145,6 @@ class ServiceController extends Controller
             'start_date.required' => 'Start date is required.',
             'end_date.required' => 'End date is required.',
             'end_date.after_or_equal' => 'End date must be after or equal to start date.',
-            'amount.required' => 'Amount is required.',
-            'amount.numeric' => 'Amount must be a number.',
             'status.required' => 'Status is required.',
         ]);
 

@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="date" class="form-control" name="services[${serviceIndex}][end_date]" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Amount <span class="text-danger">*</span></label>
+                    <label class="form-label">Amount </label>
                     <input type="number" class="form-control" name="services[${serviceIndex}][amount]" 
                            placeholder="0.00" step="0.01" min="0" required>
                 </div>

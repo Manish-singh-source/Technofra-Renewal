@@ -32,21 +32,17 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-lg-flex align-items-center mb-4 gap-3">
-                        <div class="position-relative">
-                            <input type="text" class="form-control ps-5 radius-30" placeholder="Search Order"> <span
-                                class="position-absolute top-50 product-show translate-middle-y"><i
-                                    class="bx bx-search"></i></span>
-                        </div>
+                       
                         <div class="ms-auto"><a href="{{ route('add-client') }}"
                                 class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Add New
                                 Client</a></div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table mb-0">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead class="table-light">
                                 <tr>
                                     <th> <input class="form-check-input" type="checkbox" id="select-all"></th>
-                                    <th>Id</th>
+                                    <th>ID</th>
                                     <th>Client Name</th>
                                     <th>Company Name</th>
                                     <th>Email ID</th>

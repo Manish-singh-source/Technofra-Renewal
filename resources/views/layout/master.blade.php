@@ -22,6 +22,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
 	<link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('assets/css/icons.css') }}" rel="stylesheet">
+		<link href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 	<!-- Theme Style CSS -->
 	<link rel="stylesheet" href="{{ asset('assets/css/dark-theme.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('assets/css/semi-dark.css') }}"/>
@@ -979,6 +980,13 @@
 	<script src="assets/js/index.js"></script>
     <script src="assets/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 	<script src="assets/plugins/bs-stepper/js/main.js"></script>
+	<script src="assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+	<script src="assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('#example').DataTable();
+		  } );
+	</script>
 	<!--app JS-->
 	<script src="assets/js/app.js"></script>
 	<script>

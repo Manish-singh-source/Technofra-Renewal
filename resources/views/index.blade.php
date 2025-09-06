@@ -84,7 +84,7 @@
 			<div class="card-header">
 				<div class="d-flex align-items-center">
 					<div>
-						<h6 class="mb-0">Critical Renewals</h6>
+						<h6 class="mb-0">Upcoming Renewals</h6>
 						<p class="mb-0 text-muted font-13">Overdue services and services expiring within the next 5 days</p>
 					</div>
 					<div class="ms-auto d-flex align-items-center gap-2">
@@ -97,7 +97,7 @@
 			</div>
 			<div class="card-body">
 				<div class="table-responsive">
-					<table class="table mb-0">
+					<table id="example" class="table table-striped table-bordered" style="width:100%">
 						<thead class="table-light">
 							<tr>
 								<th>Priority</th>
