@@ -10,6 +10,13 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <!--breadcrumb-->
             <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
                 <div class="ps-3">
@@ -39,10 +46,25 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-lg-flex align-items-center mb-4 gap-3">
-                        
-                        <div class="ms-auto"><a href="{{ route('vendors.create') }}"
-                                class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="bx bxs-plus-square"></i>Add New
-                                Vendor</a></div>
+
+                        <div class="ms-auto d-flex gap-2">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bx bx-upload"></i> Bulk Upload
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                                        <i class="bx bx-upload"></i> Upload Excel File
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ route('vendors.download-template') }}">
+                                        <i class="bx bx-download"></i> Download Template
+                                    </a></li>
+                                </ul>
+                            </div>
+                            <a href="{{ route('vendors.create') }}" class="btn btn-primary radius-30 mt-2 mt-lg-0">
+                                <i class="bx bxs-plus-square"></i>Add New Vendor
+                            </a>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table id="example" class="table table-striped table-bordered" style="width:100%">
@@ -154,11 +176,54 @@
             });
         });
     </script>
+
+    <!-- Bulk Upload Modal -->
+    <div class="modal fade" id="bulkUploadModal" tabindex="-1" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUploadModalLabel">Bulk Upload Vendors</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('vendors.bulk-upload') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Choose Excel File</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.xls,.csv" required>
+                            <div class="form-text">
+                                Supported formats: .xlsx, .xls, .csv (Max size: 2MB)
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <h6><i class="bx bx-info-circle"></i> Instructions:</h6>
+                            <ul class="mb-0">
+                                <li>Download the template file first</li>
+                                <li>Fill in your vendor data following the template format</li>
+                                <li>Required columns: vendor_name, email, phone</li>
+                                <li>Optional columns: address, status (1 for active, 0 for inactive)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <a href="{{ route('vendors.download-template') }}" class="btn btn-info">
+                            <i class="bx bx-download"></i> Download Template
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bx bx-upload"></i> Upload File
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!--end page wrapper -->
     <!--start overlay-->
     <div class="overlay toggle-icon"></div>
     <!--end overlay-->
     <!--Start Back To Top Button--> <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
 
-   
+
 @endsection

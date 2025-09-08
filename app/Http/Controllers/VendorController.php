@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vendor;
+use App\Imports\VendorsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VendorController extends Controller
 {
@@ -168,5 +170,85 @@ class VendorController extends Controller
 
         return redirect()->route('vendors.index')
             ->with('success', 'Vendor deleted successfully!');
+    }
+
+    /**
+     * Handle bulk upload of vendors from Excel file
+     */
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048'
+        ]);
+
+        try {
+            $import = new VendorsImport;
+            Excel::import($import, $request->file('file'));
+
+            $failures = $import->failures();
+            $errors = $import->errors();
+
+            if ($failures->isNotEmpty() || $errors->isNotEmpty()) {
+                $errorMessages = [];
+
+                foreach ($failures as $failure) {
+                    $errorMessages[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
+                }
+
+                foreach ($errors as $error) {
+                    $errorMessages[] = $error;
+                }
+
+                return redirect()->route('vendors.index')->with('error', 'Import completed with errors: ' . implode(' | ', $errorMessages));
+            }
+
+            return redirect()->route('vendors.index')->with('success', 'Vendors imported successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('vendors.index')->with('error', 'Import failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download sample Excel template for vendors
+     */
+    public function downloadTemplate()
+    {
+        $headers = [
+            'vendor_name',
+            'email',
+            'phone',
+            'address',
+            'status'
+        ];
+
+        $sampleData = [
+            [
+               
+            ],
+           
+        ];
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        foreach ($headers as $index => $header) {
+            $sheet->setCellValue(chr(65 + $index) . '1', $header);
+        }
+
+        // Set sample data
+        foreach ($sampleData as $rowIndex => $row) {
+            foreach ($row as $colIndex => $value) {
+                $sheet->setCellValue(chr(65 + $colIndex) . ($rowIndex + 2), $value);
+            }
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+        $fileName = 'vendors_template.xlsx';
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($tempFile);
+
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
 }

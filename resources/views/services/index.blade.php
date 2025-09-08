@@ -75,7 +75,28 @@
 									<td>{{ $service->vendor->name ?? 'N/A' }}</td>
 									<td>{{ $service->service_name }}</td>
 									<td>{{ $service->start_date->format('d M Y') }}</td>
-									<td>{{ $service->end_date->format('d M Y') }}</td>
+									<td>
+										<div>
+											{{ $service->end_date->format('d M Y') }}
+										</div>
+										@php
+											$daysLeft = \Carbon\Carbon::today()->diffInDays($service->end_date, false);
+											$urgencyClass = $daysLeft <= 1 ? 'text-danger' : ($daysLeft <= 3 ? 'text-warning' : 'text-info');
+										@endphp
+										<small class="{{ $urgencyClass }}">
+											<strong>
+												@if($daysLeft < 0)
+													{{ abs($daysLeft) }} days overdue
+												@elseif($daysLeft == 0)
+													Expires today
+												@elseif($daysLeft == 1)
+													Expires tomorrow
+												@else
+													{{ $daysLeft }} days left
+												@endif
+											</strong>
+										</small>
+									</td>
 									<td>₹{{ number_format($service->amount, 2) }}</td>
 									<td>
 										<span class="badge bg-{{ $service->status_badge }}">
