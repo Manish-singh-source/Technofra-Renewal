@@ -20,21 +20,18 @@
 					</ol>
 				</nav>
 			</div>
-			<div class="ms-auto">
-				<div class="btn-group">
-					<button type="button" class="btn btn-primary">Settings</button>
-					<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
-						<span class="visually-hidden">Toggle Dropdown</span>
-					</button>
-					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-						<a class="dropdown-item" href="javascript:;">Action</a>
-						<a class="dropdown-item" href="javascript:;">Another action</a>
-						<a class="dropdown-item" href="javascript:;">Something else here</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="javascript:;">Separated link</a>
-					</div>
-				</div>
-			</div>
+			 <div class="ms-auto">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary">Settings</button>
+                        <button type="button"
+                            class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
+                            data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                            <a class="dropdown-item cursor-pointer" id="delete-selected">Delete All</a>
+                        </div>
+                    </div>
+                </div>
 		</div>
 		<!--end breadcrumb-->
 
@@ -52,7 +49,7 @@
 					<table id="example" class="table table-striped table-bordered" style="width:100%">
 						<thead class="table-light">
 							<tr>
-								<th><input class="form-check-input me-3" type="checkbox" value="" aria-label="..."></th>
+								<th><input class="form-check-input" type="checkbox" id="select-all"></th>
 								<th>ID</th>
 								<th>Client Name</th>
 								<th>Vendor Name</th>
@@ -67,7 +64,8 @@
 						<tbody>
 							@forelse($services as $service)
 								<tr>
-									<td><input class="form-check-input me-3" type="checkbox" value="{{ $service->id }}" aria-label="..."></td>
+									<td><input class="form-check-input row-checkbox" type="checkbox" name="ids[]"
+                                                    value="{{ $service->id }}"></td>
 									<td>
 										<div class="d-flex align-items-center">
 											<h6 class="mb-0 font-14">{{ $service->id }}</h6>
@@ -121,6 +119,41 @@
 		</div>
 	</div>
 </div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select All functionality
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            selectAll.addEventListener('change', function() {
+                checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            });
+
+            // Delete Selected functionality
+            document.getElementById('delete-selected').addEventListener('click', function() {
+                let selected = [];
+                document.querySelectorAll('.row-checkbox:checked').forEach(cb => {
+                    selected.push(cb.value);
+                });
+                if (selected.length === 0) {
+                    alert('Please select at least one record.');
+                    return;
+                }
+                if (confirm('Are you sure you want to delete selected records?')) {
+                    // Create a form and submit
+                    let form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('delete.selected.service') }}';
+                    form.innerHTML = `
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="ids" value="${selected.join(',')}">
+                    `;
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    </script>
 <!--end page wrapper -->
 <!--start overlay-->
 <div class="overlay toggle-icon"></div>

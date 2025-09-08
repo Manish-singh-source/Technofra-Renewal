@@ -15,6 +15,13 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function deleteSelected(Request $request)
+    {
+        $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+        Service::destroy($ids);
+        return redirect()->back()->with('success', 'Selected Service deleted successfully.');
+    }
+
     public function index()
     {
         $services = Service::with(['client', 'vendor'])->latest()->get();

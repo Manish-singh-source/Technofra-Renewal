@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
 
     // Service CRUD routes
     Route::resource('services', ServiceController::class);
+    Route::delete('/services/delete-selected', [ServiceController::class, 'deleteSelected'])->name('delete.selected.service');
 
     // Mail routes for sending renewal emails
     Route::get('/send-mail/{service_id}', [MailController::class, 'sendMailForm'])->name('send-mail');

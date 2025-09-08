@@ -48,7 +48,7 @@
                         <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead class="table-light">
                                 <tr>
-                                    <th> <input class="form-check-input" type="checkbox" id="select-all"></th>
+                                    <th><input class="form-check-input" type="checkbox" id="select-all"></th>
                                     <th>Id</th>
                                     <th>Vendor Name</th>
                                     <th>Email ID</th>
