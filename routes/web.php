@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/client/delete/{id}', [ClientController::class, 'deleteclient'])->name('client.delete');
     Route::get('/client-details/{id}', [ClientController::class, 'viewclient'])->name('client.view');
      Route::delete('/client/delete-selected',  [ClientController::class, 'deleteSelected'])->name('delete.selected.client');
+
+    // Client bulk upload routes
+    Route::post('/client/bulk-upload', [ClientController::class, 'bulkUpload'])->name('client.bulk-upload');
+    Route::get('/client/download-template', [ClientController::class, 'downloadTemplate'])->name('client.download-template');
     //end Client controller
 
     // Other protected routes
@@ -72,6 +76,10 @@ Route::middleware('auth')->group(function () {
 
     // Vendor CRUD routes
     Route::resource('vendors', VendorController::class);
+
+    // Vendor bulk upload routes
+    Route::post('/vendor1/bulk-upload', [VendorController::class, 'bulkUpload'])->name('vendors.bulk-upload');
+    Route::get('/vendor1/download-template', [VendorController::class, 'downloadTemplate'])->name('vendors.download-template');
 
     // Service CRUD routes
     Route::resource('services', ServiceController::class);
