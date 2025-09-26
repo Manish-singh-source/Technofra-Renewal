@@ -121,7 +121,7 @@
                                                     value="{{ $service->id }}"></td>
 									<td>
 										<div class="d-flex align-items-center">
-											<h6 class="mb-0 font-14">{{ $service->id }}</h6>
+											<h6 class="mb-0 font-14">{{ $loop->iteration }}</h6>
 										</div>
 									</td>
 									<td>{{ $service->client->cname ?? 'N/A' }}</td>
