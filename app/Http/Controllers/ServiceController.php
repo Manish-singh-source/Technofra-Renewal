@@ -35,10 +35,7 @@ class ServiceController extends Controller
             $query->where('billing_date', '<=', $request->to_date);
         }
 
-        $services = $query->latest()->paginate(15);
-
-        // Preserve filter parameters in pagination
-        $services->appends($request->only(['from_date', 'to_date']));
+        $services = $query->latest()->get();
 
         return view('services.index', compact('services'));
     }

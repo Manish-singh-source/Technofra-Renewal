@@ -28,7 +28,7 @@
                             data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                            <a class="dropdown-item cursor-pointer" id="delete-selected">Delete All</a>
+                            <!-- Dropdown items can be added here if needed -->
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
 				<!-- Filter Form -->
 				<div class="row mb-4">
 					<div class="col-12">
-						<form method="GET" action="{{ route('services.index') }}" class="row g-3 align-items-end">
+						<form method="GET" action="{{ route('services.index') }}" class="row g-3 align-items-end" id="dateFilterForm">
 							<div class="col-md-3">
 								<label for="from_date" class="form-label">From Date</label>
 								<input type="date" class="form-control" id="from_date" name="from_date"
@@ -68,6 +68,35 @@
 					</div>
 				</div>
 
+				<!-- Results Count -->
+				<div class="row mb-3">
+					<div class="col-12">
+						<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<h6 class="mb-0">
+									Showing {{ $services->count() }} service(s)
+									@if(request('from_date') || request('to_date'))
+										<small class="text-muted">
+											(filtered
+											@if(request('from_date'))
+												from {{ \Carbon\Carbon::parse(request('from_date'))->format('d M Y') }}
+											@endif
+											@if(request('to_date'))
+												to {{ \Carbon\Carbon::parse(request('to_date'))->format('d M Y') }}
+											@endif
+											)
+										</small>
+									@endif
+								</h6>
+							</div>
+							<div>
+								<button type="button" class="btn btn-danger btn-sm" id="delete-selected">
+									<i class="bx bx-trash"></i> Delete Selected
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<div class="table-responsive">
 					<table id="example" class="table table-striped table-bordered" style="width:100%">
@@ -161,12 +190,7 @@
 					</table>
 				</div>
 
-				<!-- Pagination -->
-				@if($services->hasPages())
-					<div class="d-flex justify-content-center mt-4">
-						{{ $services->links() }}
-					</div>
-				@endif
+
 			</div>
 		</div>
 	</div>
@@ -203,6 +227,20 @@
                     document.body.appendChild(form);
                     form.submit();
                 }
+            });
+
+            // Dynamic Date Range Filtering
+            const fromDateInput = document.getElementById('from_date');
+            const toDateInput = document.getElementById('to_date');
+            const dateFilterForm = document.getElementById('dateFilterForm');
+
+            // Add event listeners for dynamic filtering
+            fromDateInput.addEventListener('change', function() {
+                dateFilterForm.submit();
+            });
+
+            toDateInput.addEventListener('change', function() {
+                dateFilterForm.submit();
             });
         });
     </script>
