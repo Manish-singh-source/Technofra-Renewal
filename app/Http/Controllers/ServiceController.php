@@ -22,11 +22,28 @@ class ServiceController extends Controller
         return redirect()->back()->with('success', 'Selected Service deleted successfully.');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::with(['client', 'vendor'])->latest()->get();
+        $query = Service::with(['client', 'vendor']);
+
+        // Apply date range filtering
+        if ($request->filled('from_date')) {
+            $query->where('billing_date', '>=', $request->from_date);
+        }
+
+        if ($request->filled('to_date')) {
+            $query->where('billing_date', '<=', $request->to_date);
+        }
+
+        $services = $query->latest()->paginate(15);
+
+        // Preserve filter parameters in pagination
+        $services->appends($request->only(['from_date', 'to_date']));
+
         return view('services.index', compact('services'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -59,6 +76,7 @@ class ServiceController extends Controller
             'services.*.service_details' => 'nullable|string',
             'services.*.start_date' => 'required|date',
             'services.*.end_date' => 'required|date|after_or_equal:services.*.start_date',
+            'services.*.billing_date' => 'required|date',
             'services.*.status' => 'required|in:active,inactive,expired,pending',
         ], [
             'client_id.required' => 'Please select a client.',
@@ -70,7 +88,8 @@ class ServiceController extends Controller
             'services.*.start_date.required' => 'Start date is required.',
             'services.*.end_date.required' => 'End date is required.',
             'services.*.end_date.after_or_equal' => 'End date must be after or equal to start date.',
-           
+            'services.*.billing_date.required' => 'Billing date is required.',
+            'services.*.billing_date.date' => 'Billing date must be a valid date.',
             'services.*.status.required' => 'Status is required.',
         ]);
 
@@ -89,7 +108,7 @@ class ServiceController extends Controller
                 'service_details' => $serviceData['service_details'] ?? null,
                 'start_date' => $serviceData['start_date'],
                 'end_date' => $serviceData['end_date'],
-                'amount' => $serviceData['amount'],
+                'billing_date' => $serviceData['billing_date'],
                 'status' => $serviceData['status'],
             ]);
         }
@@ -143,7 +162,7 @@ class ServiceController extends Controller
             'service_details' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'amount' => 'required|numeric|min:0',
+            'billing_date' => 'required|date',
             'status' => 'required|in:active,inactive,expired,pending',
         ], [
             'client_id.required' => 'Please select a client.',
@@ -152,6 +171,8 @@ class ServiceController extends Controller
             'start_date.required' => 'Start date is required.',
             'end_date.required' => 'End date is required.',
             'end_date.after_or_equal' => 'End date must be after or equal to start date.',
+            'billing_date.required' => 'Billing date is required.',
+            'billing_date.date' => 'Billing date must be a valid date.',
             'status.required' => 'Status is required.',
         ]);
 
@@ -169,7 +190,7 @@ class ServiceController extends Controller
             'service_details' => $request->service_details,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'amount' => $request->amount,
+            'billing_date' => $request->billing_date,
             'status' => $request->status,
         ]);
 

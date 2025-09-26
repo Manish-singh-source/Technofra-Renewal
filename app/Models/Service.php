@@ -21,7 +21,7 @@ class Service extends Model
         'service_details',
         'start_date',
         'end_date',
-        'amount',
+        'billing_date',
         'status',
     ];
 
@@ -33,7 +33,7 @@ class Service extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
-        'amount' => 'decimal:2',
+        'billing_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

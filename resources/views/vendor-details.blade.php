@@ -104,7 +104,7 @@
 								<th>Service Name</th>
 								<th>Start Date</th>
 								<th>End Date</th>
-								<th>Amount</th>
+								<th>Billing Date</th>
 								<th>Status</th>
 								<th>Actions</th>
 							</tr>
@@ -122,7 +122,7 @@
 									<td>{{ $service->service_name }}</td>
 									<td>{{ $service->start_date->format('d M Y') }}</td>
 									<td>{{ $service->end_date->format('d M Y') }}</td>
-									<td>${{ number_format($service->amount, 2) }}</td>
+									<td>{{ $service->billing_date->format('d M Y') }}</td>
 									<td>
 										<span class="badge bg-{{ $service->status_badge }}">
 											{{ ucfirst($service->status) }}

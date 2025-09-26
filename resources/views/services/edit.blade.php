@@ -101,11 +101,10 @@
 						</div>
 
 						<div class="col-md-6">
-							<label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
-							<input type="number" class="form-control @error('amount') is-invalid @enderror" 
-								   id="amount" name="amount" value="{{ old('amount', $service->amount) }}" 
-								   placeholder="0.00" step="0.01" min="0" required>
-							@error('amount')
+							<label for="billing_date" class="form-label">Billing Date <span class="text-danger">*</span></label>
+							<input type="date" class="form-control @error('billing_date') is-invalid @enderror"
+								   id="billing_date" name="billing_date" value="{{ old('billing_date', $service->billing_date->format('Y-m-d')) }}" required>
+							@error('billing_date')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
 						</div>
