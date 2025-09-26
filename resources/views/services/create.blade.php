@@ -90,9 +90,8 @@
 											<input type="date" class="form-control" name="services[0][end_date]" required>
 										</div>
 										<div class="col-md-3">
-											<label class="form-label">Amount</label>
-											<input type="number" class="form-control" name="services[0][amount]" 
-												   placeholder="0.00" step="0.01" min="0">
+											<label class="form-label">Billing Date <span class="text-danger">*</span></label>
+											<input type="date" class="form-control" name="services[0][billing_date]" required>
 										</div>
 										<div class="col-md-3">
 											<label class="form-label">Status <span class="text-danger">*</span></label>
@@ -203,9 +202,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="date" class="form-control" name="services[${serviceIndex}][end_date]" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Amount </label>
-                    <input type="number" class="form-control" name="services[${serviceIndex}][amount]" 
-                           placeholder="0.00" step="0.01" min="0" required>
+                    <label class="form-label">Billing Date <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" name="services[${serviceIndex}][billing_date]" required>
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Status <span class="text-danger">*</span></label>

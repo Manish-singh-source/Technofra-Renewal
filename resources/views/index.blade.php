@@ -108,7 +108,7 @@
 								<th>Start Date</th>
 								<th>Expiry Date</th>
 								<th>Status</th>
-								<th>Amount</th>
+								<th>Billing Date</th>
 								<th>Actions</th>
 							</tr>
 						</thead>
@@ -167,7 +167,7 @@
 											</span>
 										@endif
 									</td>
-									<td>₹{{ number_format($service->amount, 2) }}</td>
+									<td>{{ $service->billing_date->format('d M Y') }}</td>
 									<td>
 										<div class="d-flex order-actions">
 											<a href="{{ route('services.show', $service->id) }}" title="View">

@@ -37,14 +37,38 @@
 
 		<div class="card">
 			<div class="card-body">
-				<div class="d-lg-flex align-items-center mb-4 gap-3">
-					
-					<div class="ms-auto">
-						<a href="{{ route('services.create') }}" class="btn btn-primary radius-30 mt-2 mt-lg-0">
-							<i class="bx bxs-plus-square"></i>Add New Service
-						</a>
+				<!-- Filter Form -->
+				<div class="row mb-4">
+					<div class="col-12">
+						<form method="GET" action="{{ route('services.index') }}" class="row g-3 align-items-end">
+							<div class="col-md-3">
+								<label for="from_date" class="form-label">From Date</label>
+								<input type="date" class="form-control" id="from_date" name="from_date"
+									   value="{{ request('from_date') }}">
+							</div>
+							<div class="col-md-3">
+								<label for="to_date" class="form-label">To Date</label>
+								<input type="date" class="form-control" id="to_date" name="to_date"
+									   value="{{ request('to_date') }}">
+							</div>
+							<div class="col-md-3">
+								<button type="submit" class="btn btn-primary">
+									<i class="bx bx-search"></i> Filter
+								</button>
+								<a href="{{ route('services.index') }}" class="btn btn-outline-secondary ms-2">
+									<i class="bx bx-refresh"></i> Clear
+								</a>
+							</div>
+							<div class="col-md-3 text-end">
+								<a href="{{ route('services.create') }}" class="btn btn-primary radius-30">
+									<i class="bx bxs-plus-square"></i>Add New Service
+								</a>
+							</div>
+						</form>
 					</div>
 				</div>
+
+
 				<div class="table-responsive">
 					<table id="example" class="table table-striped table-bordered" style="width:100%">
 						<thead class="table-light">
@@ -56,7 +80,7 @@
 								<th>Service Name</th>
 								<th>Start Date</th>
 								<th>End Date</th>
-								<th>Amount</th>
+								<th>Billing Date</th>
 								<th>Status</th>
 								<th>Actions</th>
 							</tr>
@@ -97,7 +121,7 @@
 											</strong>
 										</small>
 									</td>
-									<td>₹{{ number_format($service->amount, 2) }}</td>
+									<td>{{ $service->billing_date->format('d M Y') }}</td>
 									<td>
 										<span class="badge bg-{{ $service->status_badge }}">
 											{{ ucfirst($service->status) }}
@@ -136,6 +160,13 @@
 						</tbody>
 					</table>
 				</div>
+
+				<!-- Pagination -->
+				@if($services->hasPages())
+					<div class="d-flex justify-content-center mt-4">
+						{{ $services->links() }}
+					</div>
+				@endif
 			</div>
 		</div>
 	</div>

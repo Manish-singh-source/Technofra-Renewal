@@ -80,8 +80,8 @@
 										<p class="mb-0">{{ $service->start_date->diffInDays($service->end_date) + 1 }} days</p>
 									</li>
 									<li class="list-group-item d-flex justify-content-between">
-										<b>Amount:</b>
-										<p class="mb-0">${{ number_format($service->amount, 2) }}</p>
+										<b>Billing Date:</b>
+										<p class="mb-0">{{ $service->billing_date->format('d M Y') }}</p>
 									</li>
 									<li class="list-group-item d-flex justify-content-between">
 										<b>Status:</b>
