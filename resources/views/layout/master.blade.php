@@ -190,9 +190,18 @@
 						<div class="parent-icon"><i class='bx bx-task'></i> 
 
 						</div>
-						<div class="menu-title">Servies</div>
+						<div class="menu-title">Client Renewal</div>
 					</a>
 				</li>
+				<li>
+					<a href="{{ route('vendor-services.index')}}">
+						<div class="parent-icon"><i class='bx bx-refresh'></i>
+
+						</div>
+						<div class="menu-title">Vendor Renewal</div>
+					</a>
+				</li>
+				
 				<li>
 					<a href="{{ route('client')}}">
 						<div class="parent-icon"><i class='bx bx-user'></i>

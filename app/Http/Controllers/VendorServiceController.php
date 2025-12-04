@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Service;
 use App\Models\Vendor;
+use App\Models\VendorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ServiceController extends Controller
+class VendorServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,13 +17,13 @@ class ServiceController extends Controller
     public function deleteSelected(Request $request)
     {
         $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
-        Service::whereNotNull('client_id')->whereIn('id', $ids)->delete();
-        return redirect()->back()->with('success', 'Selected Service deleted successfully.');
+        VendorService::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('success', 'Selected Vendor Service deleted successfully.');
     }
 
     public function index(Request $request)
     {
-        $query = Service::with(['client', 'vendor'])->whereNotNull('client_id');
+        $query = VendorService::with('vendor');
 
         // Apply date range filtering
         if ($request->filled('from_date')) {
@@ -37,10 +36,8 @@ class ServiceController extends Controller
 
         $services = $query->latest()->get();
 
-        return view('services.index', compact('services'));
+        return view('vendor-services.index', compact('services'));
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -49,11 +46,9 @@ class ServiceController extends Controller
      */
     public function create(Request $request)
     {
-        $clients = Client::orderBy('cname')->get();
         $vendors = Vendor::orderBy('name')->get();
-        $selectedClientId = $request->get('client_id');
         $selectedVendorId = $request->get('vendor_id');
-        return view('services.create', compact('clients', 'vendors', 'selectedClientId', 'selectedVendorId'));
+        return view('vendor-services.create', compact('vendors', 'selectedVendorId'));
     }
 
     /**
@@ -66,9 +61,8 @@ class ServiceController extends Controller
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'client_id' => 'required|exists:clients,id',
+            'vendor_id' => 'required|exists:vendors,id',
             'services' => 'required|array|min:1',
-            'services.*.vendor_id' => 'required|exists:vendors,id',
             'services.*.service_name' => 'required|string|max:255',
             'services.*.service_details' => 'nullable|string',
             'services.*.start_date' => 'required|date',
@@ -76,11 +70,9 @@ class ServiceController extends Controller
             'services.*.billing_date' => 'required|date',
             'services.*.status' => 'required|in:active,inactive,expired,pending',
         ], [
-            'client_id.required' => 'Please select a client.',
-            'client_id.exists' => 'Selected client does not exist.',
+            'vendor_id.required' => 'Please select a vendor.',
+            'vendor_id.exists' => 'Selected vendor does not exist.',
             'services.required' => 'At least one service is required.',
-            'services.*.vendor_id.required' => 'Please select a vendor for each service.',
-            'services.*.vendor_id.exists' => 'Selected vendor does not exist.',
             'services.*.service_name.required' => 'Service name is required.',
             'services.*.start_date.required' => 'Start date is required.',
             'services.*.end_date.required' => 'End date is required.',
@@ -98,9 +90,8 @@ class ServiceController extends Controller
 
         // Create multiple services
         foreach ($request->services as $serviceData) {
-            Service::create([
-                'client_id' => $request->client_id,
-                'vendor_id' => $serviceData['vendor_id'],
+            VendorService::create([
+                'vendor_id' => $request->vendor_id,
                 'service_name' => $serviceData['service_name'],
                 'service_details' => $serviceData['service_details'] ?? null,
                 'start_date' => $serviceData['start_date'],
@@ -110,8 +101,8 @@ class ServiceController extends Controller
             ]);
         }
 
-        return redirect()->route('services.index')
-            ->with('success', 'Services created successfully!');
+        return redirect()->route('vendor-services.index')
+            ->with('success', 'Vendor Services created successfully!');
     }
 
     /**
@@ -122,8 +113,8 @@ class ServiceController extends Controller
      */
     public function show($id)
     {
-        $service = Service::with(['client', 'vendor'])->whereNotNull('client_id')->findOrFail($id);
-        return view('services.show', compact('service'));
+        $service = VendorService::with('vendor')->findOrFail($id);
+        return view('vendor-services.show', compact('service'));
     }
 
     /**
@@ -134,10 +125,9 @@ class ServiceController extends Controller
      */
     public function edit($id)
     {
-        $service = Service::whereNotNull('client_id')->findOrFail($id);
-        $clients = Client::orderBy('cname')->get();
+        $service = VendorService::findOrFail($id);
         $vendors = Vendor::orderBy('name')->get();
-        return view('services.edit', compact('service', 'clients', 'vendors'));
+        return view('vendor-services.edit', compact('service', 'vendors'));
     }
 
     /**
@@ -149,11 +139,10 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $service = Service::whereNotNull('client_id')->findOrFail($id);
+        $service = VendorService::findOrFail($id);
 
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'client_id' => 'required|exists:clients,id',
             'vendor_id' => 'required|exists:vendors,id',
             'service_name' => 'required|string|max:255',
             'service_details' => 'nullable|string',
@@ -162,7 +151,6 @@ class ServiceController extends Controller
             'billing_date' => 'required|date',
             'status' => 'required|in:active,inactive,expired,pending',
         ], [
-            'client_id.required' => 'Please select a client.',
             'vendor_id.required' => 'Please select a vendor.',
             'service_name.required' => 'Service name is required.',
             'start_date.required' => 'Start date is required.',
@@ -181,7 +169,6 @@ class ServiceController extends Controller
 
         // Update the service
         $service->update([
-            'client_id' => $request->client_id,
             'vendor_id' => $request->vendor_id,
             'service_name' => $request->service_name,
             'service_details' => $request->service_details,
@@ -191,8 +178,8 @@ class ServiceController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('services.index')
-            ->with('success', 'Service updated successfully!');
+        return redirect()->route('vendor-services.index')
+            ->with('success', 'Vendor Service updated successfully!');
     }
 
     /**
@@ -203,10 +190,10 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        $service = Service::whereNotNull('client_id')->findOrFail($id);
+        $service = VendorService::findOrFail($id);
         $service->delete();
 
-        return redirect()->route('services.index')
-            ->with('success', 'Service deleted successfully!');
+        return redirect()->route('vendor-services.index')
+            ->with('success', 'Vendor Service deleted successfully!');
     }
 }

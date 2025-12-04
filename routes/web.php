@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\VendorServiceController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
@@ -84,6 +85,10 @@ Route::middleware('auth')->group(function () {
     // Service CRUD routes
     Route::resource('services', ServiceController::class);
     Route::delete('/services/delete-selected', [ServiceController::class, 'deleteSelected'])->name('delete.selected.service');
+
+    // Vendor Service CRUD routes
+    Route::resource('vendor-services', VendorServiceController::class);
+    Route::delete('/vendor-services/delete-selected', [VendorServiceController::class, 'deleteSelected'])->name('delete.selected.vendor-service');
 
     // Mail routes for sending renewal emails
     Route::get('/send-mail/{service_id}', [MailController::class, 'sendMailForm'])->name('send-mail');
