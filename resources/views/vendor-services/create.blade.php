@@ -70,6 +70,15 @@
 											<textarea class="form-control ckeditor" name="services[0][service_details]"
 													  id="service_details_0" placeholder="Enter detailed description of the service..." rows="4"></textarea>
 										</div>
+										<div class="col-md-6">
+											<label class="form-label">Plan Type <span class="text-danger">*</span></label>
+											<select class="form-select" name="services[0][plan_type]" required>
+												<option value="">Choose plan type...</option>
+												<option value="yearly">Yearly</option>
+												<option value="quarterly">Quarterly</option>
+												<option value="monthly">Monthly</option>
+											</select>
+										</div>
 										<div class="col-md-3">
 											<label class="form-label">Start Date <span class="text-danger">*</span></label>
 											<input type="date" class="form-control" name="services[0][start_date]" required>
@@ -79,8 +88,8 @@
 											<input type="date" class="form-control" name="services[0][end_date]" required>
 										</div>
 										<div class="col-md-3">
-											<label class="form-label">Billing Date <span class="text-danger">*</span></label>
-											<input type="date" class="form-control" name="services[0][billing_date]" required>
+											<label class="form-label">Billing Date</label>
+											<input type="date" class="form-control" name="services[0][billing_date]">
 										</div>
 										<div class="col-md-3">
 											<label class="form-label">Status <span class="text-danger">*</span></label>
@@ -168,6 +177,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <textarea class="form-control ckeditor" name="services[${serviceIndex}][service_details]"
                               id="service_details_${serviceIndex}" placeholder="Enter detailed description of the service..." rows="4"></textarea>
                 </div>
+                <div class="col-md-6">
+                    <label class="form-label">Plan Type <span class="text-danger">*</span></label>
+                    <select class="form-select" name="services[${serviceIndex}][plan_type]" required>
+                        <option value="">Choose plan type...</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
                 <div class="col-md-3">
                     <label class="form-label">Start Date <span class="text-danger">*</span></label>
                     <input type="date" class="form-control" name="services[${serviceIndex}][start_date]" required>
@@ -177,8 +195,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="date" class="form-control" name="services[${serviceIndex}][end_date]" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Billing Date <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control" name="services[${serviceIndex}][billing_date]" required>
+                    <label class="form-label">Billing Date</label>
+                    <input type="date" class="form-control" name="services[${serviceIndex}][billing_date]">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Status <span class="text-danger">*</span></label>

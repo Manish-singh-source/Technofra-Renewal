@@ -18,6 +18,7 @@ class VendorService extends Model
         'vendor_id',
         'service_name',
         'service_details',
+        'plan_type',
         'start_date',
         'end_date',
         'billing_date',

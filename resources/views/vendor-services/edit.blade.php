@@ -68,6 +68,19 @@
 						</div>
 
 						<div class="col-md-6">
+							<label for="plan_type" class="form-label">Plan Type <span class="text-danger">*</span></label>
+							<select class="form-select @error('plan_type') is-invalid @enderror" id="plan_type" name="plan_type" required>
+								<option value="">Choose plan type...</option>
+								<option value="yearly" {{ old('plan_type', $service->plan_type) == 'yearly' ? 'selected' : '' }}>Yearly</option>
+								<option value="quarterly" {{ old('plan_type', $service->plan_type) == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
+								<option value="monthly" {{ old('plan_type', $service->plan_type) == 'monthly' ? 'selected' : '' }}>Monthly</option>
+							</select>
+							@error('plan_type')
+								<div class="invalid-feedback">{{ $message }}</div>
+							@enderror
+						</div>
+
+						<div class="col-md-6">
 							<label for="start_date" class="form-label">Start Date <span class="text-danger">*</span></label>
 							<input type="date" class="form-control @error('start_date') is-invalid @enderror"
 								   id="start_date" name="start_date" value="{{ old('start_date', $service->start_date->format('Y-m-d')) }}" required>
@@ -86,9 +99,9 @@
 						</div>
 
 						<div class="col-md-6">
-							<label for="billing_date" class="form-label">Billing Date <span class="text-danger">*</span></label>
+							<label for="billing_date" class="form-label">Billing Date</label>
 							<input type="date" class="form-control @error('billing_date') is-invalid @enderror"
-								   id="billing_date" name="billing_date" value="{{ old('billing_date', $service->billing_date->format('Y-m-d')) }}" required>
+								   id="billing_date" name="billing_date" value="{{ old('billing_date', $service->billing_date ? $service->billing_date->format('Y-m-d') : '') }}">
 							@error('billing_date')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror

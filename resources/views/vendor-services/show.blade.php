@@ -51,6 +51,10 @@
 										<b>Service Name:</b>
 										<p class="mb-0">{{ $service->service_name }}</p>
 									</li>
+									<li class="list-group-item d-flex justify-content-between">
+										<b>Plan Type:</b>
+										<p class="mb-0">{{ ucfirst($service->plan_type) }}</p>
+									</li>
 									@if($service->service_details)
 									<li class="list-group-item">
 										<b>Service Details:</b>
@@ -73,7 +77,7 @@
 									</li>
 									<li class="list-group-item d-flex justify-content-between">
 										<b>Billing Date:</b>
-										<p class="mb-0">{{ $service->billing_date->format('d M Y') }}</p>
+										<p class="mb-0">{{ $service->billing_date ? $service->billing_date->format('d M Y') : 'N/A' }}</p>
 									</li>
 									<li class="list-group-item d-flex justify-content-between">
 										<b>Status:</b>

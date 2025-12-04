@@ -106,6 +106,7 @@
 								<th>ID</th>
 								<th>Vendor Name</th>
 								<th>Service Name</th>
+								<th>Plan Type</th>
 								<th>Start Date</th>
 								<th>End Date</th>
 								<th>Billing Date</th>
@@ -125,6 +126,7 @@
 									</td>
 									<td>{{ $service->vendor->name ?? 'N/A' }}</td>
 									<td>{{ $service->service_name }}</td>
+									<td>{{ ucfirst($service->plan_type) }}</td>
 									<td>{{ $service->start_date->format('d M Y') }}</td>
 									<td>
 										<div>
@@ -148,7 +150,7 @@
 											</strong>
 										</small>
 									</td>
-									<td>{{ $service->billing_date->format('d M Y') }}</td>
+									<td>{{ $service->billing_date ? $service->billing_date->format('d M Y') : 'N/A' }}</td>
 									<td>
 										<span class="badge bg-{{ $service->status_badge }}">
 											{{ ucfirst($service->status) }}
@@ -172,7 +174,7 @@
 								</tr>
 							@empty
 								<tr>
-									<td colspan="9" class="text-center py-4">
+									<td colspan="10" class="text-center py-4">
 										<div class="d-flex flex-column align-items-center">
 											<i class='bx bx-folder-open' style="font-size: 48px; color: #ccc;"></i>
 											<h6 class="mt-2 text-muted">No vendor services found</h6>

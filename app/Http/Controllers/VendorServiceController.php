@@ -66,19 +66,21 @@ class VendorServiceController extends Controller
             'services' => 'required|array|min:1',
             'services.*.service_name' => 'required|string|max:255',
             'services.*.service_details' => 'nullable|string',
+            'services.*.plan_type' => 'required|in:monthly,yearly,quarterly',
             'services.*.start_date' => 'required|date',
             'services.*.end_date' => 'required|date|after_or_equal:services.*.start_date',
-            'services.*.billing_date' => 'required|date',
+            'services.*.billing_date' => 'nullable|date',
             'services.*.status' => 'required|in:active,inactive,expired,pending',
         ], [
             'vendor_id.required' => 'Please select a vendor.',
             'vendor_id.exists' => 'Selected vendor does not exist.',
             'services.required' => 'At least one service is required.',
             'services.*.service_name.required' => 'Service name is required.',
+            'services.*.plan_type.required' => 'Plan type is required.',
+            'services.*.plan_type.in' => 'Invalid plan type.',
             'services.*.start_date.required' => 'Start date is required.',
             'services.*.end_date.required' => 'End date is required.',
             'services.*.end_date.after_or_equal' => 'End date must be after or equal to start date.',
-            'services.*.billing_date.required' => 'Billing date is required.',
             'services.*.billing_date.date' => 'Billing date must be a valid date.',
             'services.*.status.required' => 'Status is required.',
         ]);
@@ -91,15 +93,19 @@ class VendorServiceController extends Controller
 
         // Create multiple services
         foreach ($request->services as $serviceData) {
-            VendorService::create([
+            $data = [
                 'vendor_id' => $request->vendor_id,
                 'service_name' => $serviceData['service_name'],
                 'service_details' => $serviceData['service_details'] ?? null,
+                'plan_type' => $serviceData['plan_type'],
                 'start_date' => $serviceData['start_date'],
                 'end_date' => $serviceData['end_date'],
-                'billing_date' => $serviceData['billing_date'],
                 'status' => $serviceData['status'],
-            ]);
+            ];
+            if (!empty($serviceData['billing_date'])) {
+                $data['billing_date'] = $serviceData['billing_date'];
+            }
+            VendorService::create($data);
         }
 
         return redirect()->route('vendor-services.index')
@@ -147,17 +153,19 @@ class VendorServiceController extends Controller
             'vendor_id' => 'required|exists:vendors,id',
             'service_name' => 'required|string|max:255',
             'service_details' => 'nullable|string',
+            'plan_type' => 'required|in:monthly,yearly,quarterly',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'billing_date' => 'required|date',
+            'billing_date' => 'nullable|date',
             'status' => 'required|in:active,inactive,expired,pending',
         ], [
             'vendor_id.required' => 'Please select a vendor.',
             'service_name.required' => 'Service name is required.',
+            'plan_type.required' => 'Plan type is required.',
+            'plan_type.in' => 'Invalid plan type.',
             'start_date.required' => 'Start date is required.',
             'end_date.required' => 'End date is required.',
             'end_date.after_or_equal' => 'End date must be after or equal to start date.',
-            'billing_date.required' => 'Billing date is required.',
             'billing_date.date' => 'Billing date must be a valid date.',
             'status.required' => 'Status is required.',
         ]);
@@ -169,15 +177,21 @@ class VendorServiceController extends Controller
         }
 
         // Update the service
-        $service->update([
+        $data = [
             'vendor_id' => $request->vendor_id,
             'service_name' => $request->service_name,
             'service_details' => $request->service_details,
+            'plan_type' => $request->plan_type,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'billing_date' => $request->billing_date,
             'status' => $request->status,
-        ]);
+        ];
+        if (!empty($request->billing_date)) {
+            $data['billing_date'] = $request->billing_date;
+        } else {
+            $data['billing_date'] = null;
+        }
+        $service->update($data);
 
         return redirect()->route('vendor-services.index')
             ->with('success', 'Vendor Service updated successfully!');
