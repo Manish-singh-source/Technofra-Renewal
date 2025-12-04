@@ -18,6 +18,7 @@ class ServiceController extends Controller
     public function deleteSelected(Request $request)
     {
         $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+        $ids = array_map('intval', $ids);
         Service::whereNotNull('client_id')->whereIn('id', $ids)->delete();
         return redirect()->back()->with('success', 'Selected Service deleted successfully.');
     }

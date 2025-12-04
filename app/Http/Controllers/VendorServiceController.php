@@ -17,6 +17,7 @@ class VendorServiceController extends Controller
     public function deleteSelected(Request $request)
     {
         $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+        $ids = array_map('intval', $ids);
         VendorService::whereIn('id', $ids)->delete();
         return redirect()->back()->with('success', 'Selected Vendor Service deleted successfully.');
     }

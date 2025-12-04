@@ -221,7 +221,6 @@
                     form.action = '{{ route('delete.selected.service') }}';
                     form.innerHTML = `
                         @csrf
-                        <input type="hidden" name="_method" value="DELETE">
                         <input type="hidden" name="ids" value="${selected.join(',')}">
                     `;
                     document.body.appendChild(form);

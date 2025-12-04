@@ -84,11 +84,11 @@ Route::middleware('auth')->group(function () {
 
     // Service CRUD routes
     Route::resource('services', ServiceController::class);
-    Route::delete('/services/delete-selected', [ServiceController::class, 'deleteSelected'])->name('delete.selected.service');
+    Route::post('/services/delete-selected', [ServiceController::class, 'deleteSelected'])->name('delete.selected.service');
 
     // Vendor Service CRUD routes
     Route::resource('vendor-services', VendorServiceController::class);
-    Route::delete('/vendor-services/delete-selected', [VendorServiceController::class, 'deleteSelected'])->name('delete.selected.vendor-service');
+    Route::post('/vendor-services/delete-selected', [VendorServiceController::class, 'deleteSelected'])->name('delete.selected.vendor-service');
 
     // Mail routes for sending renewal emails
     Route::get('/send-mail/{service_id}', [MailController::class, 'sendMailForm'])->name('send-mail');
