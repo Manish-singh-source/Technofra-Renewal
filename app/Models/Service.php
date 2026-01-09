@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotificationMail;
+use App\Models\User;
 
 class Service extends Model
 {
@@ -23,6 +27,7 @@ class Service extends Model
         'end_date',
         'billing_date',
         'status',
+        'five_days_notified',
     ];
 
     /**
@@ -37,6 +42,22 @@ class Service extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::saving(function ($service) {
+            $fiveDaysFromNow = Carbon::today()->addDays(5);
+            if ($service->end_date->isSameDay($fiveDaysFromNow) && !$service->five_days_notified) {
+                $adminEmail = env('ADMIN_EMAIL');
+                $admin = User::where('email', $adminEmail)->first();
+                if ($admin) {
+                    Mail::to($adminEmail)->send(new NotificationMail([$service], $admin));
+                    $service->five_days_notified = true;
+                }
+            }
+        });
+    }
 
     /**
      * Get the client that owns the service.
